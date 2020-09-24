@@ -13,31 +13,34 @@ import Modal from "./modal"
 
 //redux stuff
 
-import { Provider } from 'react-redux'
-import store from './Redux/store'
+
+import {useDispatch} from 'react-redux'
 
 
 const App = () => {
 
   const [shouldShow, setShouldShow] = React.useState(true)
+  const dispatch = useDispatch()
 
+  
   const handleClose = () => {
     setShouldShow(false)
   }
 
-  const addToken = (token) => {
-    axios.post('http://localhost:4000/token', { token })
-      .then(res => {
-      console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
-
+  
+  
   React.useEffect(() => {
-
+    const addToken = (token) => {
+      dispatch({type: 'SET_TOKEN', payload: token})
+      axios.post('http://localhost:4000/token', { token })
+        .then(res => {
+        console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+    
     const button = document.querySelector('.permission')
 
     if (!button) {
@@ -61,6 +64,7 @@ const App = () => {
       })
     }
 
+    // need this to run everytime on mount
     if (Notification.permission === 'granted') {
       requestFirebaseNotificationPermission()
         .then((firebaseToken) => {
@@ -73,10 +77,21 @@ const App = () => {
         });
     }
 
-  }, [])
+  }, [dispatch])
+
+  if ('permissions' in navigator) {
+    navigator.permissions.query({ name: 'notifications' }).then(function (notificationPerm) {
+      notificationPerm.onchange = function () {
+        messaging.deleteToken()
+          .then((status) => { console.log(status) })
+          .catch((err)=>{console.log(err)})
+        // console.log("User decided to change his seettings. New permission: " + notificationPerm.state);
+      };
+    });
+  }
 
   return (
-    <Provider store={store}>
+    <div>
       <Modal
         isVisible={Notification.permission !== "granted" && shouldShow}
         onClose={handleClose}
@@ -90,7 +105,7 @@ const App = () => {
           </div>
         </Fragment>
       </div>
-    </Provider>
+    </div>
   );
 };
 
