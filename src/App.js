@@ -77,6 +77,8 @@ const App = () => {
         });
     }
 
+    
+
   }, [dispatch])
 
   if ('permissions' in navigator) {

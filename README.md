@@ -4,6 +4,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+    // "start": "cra-append-sw --mode dev  ./public/firebase-messaging-sw.js && react-scripts start",
+    // "build": "cra-append-sw ./public/firebase-messaging-sw.js && react-scripts build",
+
 ### `yarn start`
 
 Runs the app in the development mode.<br />
