@@ -82,10 +82,13 @@ const App = () => {
   if ('permissions' in navigator) {
     navigator.permissions.query({ name: 'notifications' }).then(function (notificationPerm) {
       notificationPerm.onchange = function () {
-        messaging.deleteToken()
-          .then((status) => { console.log(status) })
-          .catch((err)=>{console.log(err)})
-        // console.log("User decided to change his seettings. New permission: " + notificationPerm.state);
+        if (Notification.permission !== 'granted') {
+          
+          messaging.deleteToken()
+            .then((status) => { console.log(status) })
+            .catch((err)=>{console.log(err)})
+          // console.log("User decided to change his seettings. New permission: " + notificationPerm.state);
+        }
       };
     });
   }
